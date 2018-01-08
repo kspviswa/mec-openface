@@ -55,7 +55,8 @@ limitations under the License.
             </div>
             </td><td>
             <div class="content">
-                <h2>Servers: <span id="serverStatus"></span> Latency: <div id="serverLatency"></div></h2>
+                    <h2>Servers: <span id="serverStatus"></span></h2>
+                    <h2>Latency: <span id="serverLatency"></span>
                 <!-- <div id="serverStatus"></div> -->
                 <div class="btn-group" role="group" id="serverBtn">
                     <button type="button" class="btn btn-default active" id="local">Local</button>
@@ -132,9 +133,11 @@ limitations under the License.
 
                 <br/>
 
+                <div style='max-width: 750px; max-height:162px; overflow-y: auto;'>
                 <table class="table table-striped table-hover table-condensed"
                        id="peopleTable">
                 </table>
+                </div>
                 <script id="peopleTableTmpl" type="text/x-handlebars-template">
                     <thead><tr>
                         <th></th>

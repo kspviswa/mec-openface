@@ -153,11 +153,17 @@ function sendState() {
     socket.send(JSON.stringify(msg));
 }
 
+function updateLatency(lat) {
+    var strHtml = "<font color='red'> " + lat + " ms </font>";
+    $("#serverLatency").html(strHtml);
+}
+
 function createSocket(address, name) {
     socket = new WebSocket(address);
     socketName = name;
     socket.binaryType = "arraybuffer";
     socket.onopen = function() {
+        var nowStart = new Date();
         $("#serverStatus").html("Connected to " + name);
         sentTimes = [];
         receivedTimes = [];
@@ -166,8 +172,11 @@ function createSocket(address, name) {
 
         socket.send(JSON.stringify({'type': 'NULL'}));
         sentTimes.push(new Date());
+        var nowEnd = new Date();
+        updateLatency((nowEnd.getMilliseconds() - nowStart.getMilliseconds()));
     }
     socket.onmessage = function(e) {
+        var nowStart = new Date();
         console.log(e);
         j = JSON.parse(e.data)
         if (j.type == "NULL") {
@@ -211,7 +220,7 @@ function createSocket(address, name) {
             $("#peopleInVideo").html(h);
         } else if (j.type == "ANNOTATED") {
             $("#detectedFaces").html(
-                "<img src='" + j['content'] + "' width='430px'></img>"
+                "<img src='" + j['content'] + "' width='748px' height='455px'></img>"
             )
         } else if (j.type == "TSNE_DATA") {
             BootstrapDialog.show({
@@ -220,14 +229,18 @@ function createSocket(address, name) {
         } else {
             console.log("Unrecognized message type: " + j.type);
         }
+        var nowEnd = new Date();
+        updateLatency((nowEnd.getMilliseconds() - nowStart.getMilliseconds()));
     }
     socket.onerror = function(e) {
         console.log("Error creating WebSocket connection to " + address);
         console.log(e);
+        updateLatency("---");
     }
     socket.onclose = function(e) {
         if (e.target == socket) {
             $("#serverStatus").html("Disconnected.");
+            updateLatency("---")
         }
     }
 }
